@@ -6,6 +6,7 @@ import com.driver.model.Station;
 import com.driver.services.TrainService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,24 +33,24 @@ public class TrainController {
         return trainId;
 
     }
-
-    @GetMapping("/calculate-avaiable-seats")
-    public Integer checkSeatAvailability(@RequestBody SeatAvailabilityEntryDto seatAvailabilityEntryDto){
-        Integer count = trainService.calculateAvailableSeats(seatAvailabilityEntryDto);
-        return count;
-    }
-
-    @GetMapping("/calculate-people-onboarding")
-    public Integer calculatePeopleOnBoarding(@RequestParam("trainId")Integer trainId,@RequestParam("station") Station station){
-
-        try{
-            Integer count = trainService.calculatePeopleBoardingAtAStation(trainId,station);
-            return count;
-        }catch (Exception e){
-            return 0;
-        }
-    }
-
+//
+//    @GetMapping("/calculate-avaiable-seats")
+//    public Integer checkSeatAvailability(@RequestBody SeatAvailabilityEntryDto seatAvailabilityEntryDto){
+//        Integer count = trainService.calculateAvailableSeats(seatAvailabilityEntryDto);
+//        return count;
+//    }
+//
+//    @GetMapping("/calculate-people-onboarding")
+//    public Integer calculatePeopleOnBoarding(@RequestParam("trainId")Integer trainId,@RequestParam("station") Station station){
+//
+//        try{
+//            Integer count = trainService.calculatePeopleBoardingAtAStation(trainId,station);
+//            return count;
+//        }catch (Exception e){
+//            return 0;
+//        }
+//    }
+//
     @GetMapping("/calculate-oldest-person-travelling/{trainId}")
     public Integer calculateOldestPersonTravelling(@PathVariable("trainId")Integer trainId){
 
@@ -65,8 +66,12 @@ public class TrainController {
 
     @GetMapping("get-list-of-trains-arriving-in-a-range-of-time")
     public List<Integer> calculateListOfTrainIdsAtAStationInAParticularTimeRange(@RequestParam("station")Station station,
-                                                                                 @RequestParam("startTime")LocalTime startTime
-                                                                                 ,@RequestParam("endTime")LocalTime endTime){
+                                                                                 @RequestParam("startTime")
+                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+                                                                                 LocalTime startTime,
+                                                                                 @RequestParam("endTime")
+                                                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+                                                                                     LocalTime endTime){
 
         return trainService.trainsBetweenAGivenTime(station,startTime,endTime);
     }
