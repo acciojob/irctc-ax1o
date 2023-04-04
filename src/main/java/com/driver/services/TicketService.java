@@ -42,6 +42,42 @@ public class TicketService {
         //Also in the passenger Entity change the attribute bookedTickets by using the attribute bookingPersonId.
        //And the end return the ticketId that has come from db
 
+        Train train = trainRepository.findById(bookTicketEntryDto.getTrainId()).get();
+
+        String stations[] = train.getRoute().split(",");
+
+        //calculate available seats between boarding station to dest station
+
+        final int pricePerStation = 300;
+
+        //chcek if the train passes through the station or not
+        int i = 0;
+
+        boolean fromStation = false;
+        //first check from station
+        for(i = 0 ; i < stations.length;i++){
+            if(stations[i].compareTo(bookTicketEntryDto.getFromStation().toString()) == 0){
+                fromStation = true;
+                break;
+            }
+        }
+
+        boolean toStation = false;
+        //check to station
+        for(i = i ; i < stations.length;i++){
+
+            if(stations[i].compareTo(bookTicketEntryDto.getToStation().toString()) == 0){
+                toStation = true;
+                break;
+            }
+
+        }
+
+        if(!fromStation || !toStation){
+            throw new Exception("Invalid stations");
+        }
+
+
 
 
        return 1;
